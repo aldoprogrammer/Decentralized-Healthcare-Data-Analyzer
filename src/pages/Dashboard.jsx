@@ -8,23 +8,24 @@ import QRCode from 'qrcode.react';
 const Dashboard = () => {
     const { showAldoAlert } = useAldoAlert();
 
-    const healthRisks = "predict health risks"
-    const recommendPreventiveMeasures = "to recommend preventive measures to the patient. " 
-    const personalizedMedicine = "this is dummy medicnie"
-    const earlyDiseaseDetection = "this is dummy disease"
-    const publicHealthMonitoring = "please dont go to crowsed places"
-
+    const healthRisks = "Increased risk of heart disease, Higher susceptibility to respiratory infections, Higher probability of developing osteoporosis."
+    const recommendPreventiveMeasures = "Maintain a balanced diet rich in fruits and vegetables, Avoid tobacco smoke and limit alcohol consumption, Ensure regular check-ups with your healthcare provider." 
+    const personalizedMedicine = "Paracetamol, Ibuprofen, Prednisone, Atorvastatin, Levothyroxine";
+    const earlyDiseaseDetection = "Blood tests to monitor cholesterol levels and detect heart disease risk, Regular screenings for cancer, such as mammograms or colonoscopies, Regular eye exams to detect vision problems or eye diseases."
+    const publicHealthMonitoring = "Follow public health guidelines regarding social distancing and mask-wearing, Report any symptoms of contagious illnesses to healthcare authorities, Advocate for policies that promote public health and safety."
+    const symptoms = "this is dummy symptoms"
     const [patientDetails, setPatientDetails] = useState({
         name: '',
         age: '',
         gender: '',
-        symptoms: '',
+        symptoms: symptoms,
         healthRisks: healthRisks,
         recommendPreventiveMeasures: recommendPreventiveMeasures,
         personalizedMedicine: personalizedMedicine,
         earlyDiseaseDetection: earlyDiseaseDetection,
         publicHealthMonitoring: publicHealthMonitoring,
     });
+    
     const [tab, setTab] = useState('image');
     const [file, setFile] = useState(null);
     const [qrCodeValue, setQrCodeValue] = useState('');
@@ -51,7 +52,7 @@ const Dashboard = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         // Extract necessary data for the QR code
-        const { name, age, gender, symptoms, healthRisks, recommendPreventiveMeasures, personalizedMedicine   } = patientDetails;
+        const { name, age, gender, symptoms, healthRisks, recommendPreventiveMeasures, personalizedMedicine, earlyDiseaseDetection, publicHealthMonitoring   } = patientDetails;
         // Combine patient details into one object
         const qrData = {
             name,
@@ -60,15 +61,20 @@ const Dashboard = () => {
             symptoms,
             healthRisks,
             recommendPreventiveMeasures,
-            personalizedMedicine
+            personalizedMedicine,
+            earlyDiseaseDetection,
+            publicHealthMonitoring,
         };
         // Convert the data to a string
         const qrCodeValue = JSON.stringify(qrData);
+        // Store the JSON data in local storage
+        localStorage.setItem('qrCodeData', qrCodeValue);
         setQrCodeValue(qrCodeValue);
         console.log(qrCodeValue);
     
         showAldoAlert("Scan disease successfully!", 'success');
     };
+    
     
     
     
