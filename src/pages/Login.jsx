@@ -1,18 +1,18 @@
 import {
-    Card,
-    Input,
-    Checkbox,
-    Button,
-    Typography,
-  } from "@material-tailwind/react";
+  Card,
+  Input,
+  Checkbox,
+  Button,
+  Typography,
+} from "@material-tailwind/react";
 import Logo from '../assets/dhda.png'
 import { Link } from "react-router-dom";
 
-  export function Login() {
-    return (
-<div className="flex flex-col gap-3 items-center justify-center h-auto">
-<img src={Logo} alt="" className="w-52 h-52" />
-       <Card color="white" shadow={true} className="w-2/5 mx-auto p-5 flex items-center justify-center h-4/5">
+export function Login() {
+  return (
+    <div className="flex flex-col gap-3 items-center justify-center h-auto">
+      <img src={Logo} alt="" className="w-52 h-52" />
+      <Card color="white" shadow={true} className="w-2/5 mx-auto p-5 flex items-center justify-center h-4/5 mb-10">
         <Typography variant="h4" color="blue-gray">
           Sign In
         </Typography>
@@ -46,9 +46,14 @@ import { Link } from "react-router-dom";
             />
           </div>
           <Link to='/dashboard'>
-          <Button className="mt-6" fullWidth>
-            Sign In
-          </Button>
+            <Button className="mt-6" fullWidth>
+              Sign In
+            </Button>
+            {/* Create button for Metamask login */}
+            <Button className="mt-3 bg-yellow-900 hover:bg-gradient-to-r text-white font-bold duration-300 ease-out px-4 rounded
+                w-full py-3">
+              Connect with Metamask
+            </Button>
           </Link>
           <Typography color="gray" className="mt-4 text-center font-normal">
             Don't have an account?{" "}
@@ -58,6 +63,6 @@ import { Link } from "react-router-dom";
           </Typography>
         </form>
       </Card>
-      </div>
-    );
-  }
+    </div>
+  );
+}
