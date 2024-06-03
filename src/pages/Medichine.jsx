@@ -36,14 +36,14 @@ const PrintableContent = ({ qrCodeResult, formattedDateTime }) =>
                 <p className='text-base text-gray-800'>{JSON.parse(qrCodeResult).recommendPreventiveMeasures}</p>
             </div>
             <div className='flex flex-col gap-2'>
-            <div className='flex flex-col'>
-                <p className='text-sm font-semibold text-black'>Personalized Medicine:</p>
-                <p className='text-base text-gray-800'>{JSON.parse(qrCodeResult).personalizedMedicine}</p>
-            </div>
-            <div className='flex flex-col'>
-                <p className='text-sm font-semibold text-black'>Note:</p>
-                <p className='text-base text-gray-800'>Drink this medicine 3 times a day, after eating.</p>
-            </div>
+                <div className='flex flex-col'>
+                    <p className='text-sm font-semibold text-black'>Personalized Medicine:</p>
+                    <p className='text-base text-gray-800'>{JSON.parse(qrCodeResult).personalizedMedicine}</p>
+                </div>
+                <div className='flex flex-col'>
+                    <p className='text-sm font-semibold text-black'>Note:</p>
+                    <p className='text-base text-gray-800'>Drink this medicine 3 times a day, after eating.</p>
+                </div>
             </div>
             <div className='flex flex-col'>
                 <p className='text-sm font-semibold text-black'>Early Disease Detection:</p>

@@ -9,7 +9,7 @@ const Dashboard = () => {
     const { showAldoAlert } = useAldoAlert();
 
     const healthRisks = "Increased risk of heart disease, Higher susceptibility to respiratory infections, Higher probability of developing osteoporosis."
-    const recommendPreventiveMeasures = "Maintain a balanced diet rich in fruits and vegetables, Avoid tobacco smoke and limit alcohol consumption, Ensure regular check-ups with your healthcare provider." 
+    const recommendPreventiveMeasures = "Maintain a balanced diet rich in fruits and vegetables, Avoid tobacco smoke and limit alcohol consumption, Ensure regular check-ups with your healthcare provider."
     const personalizedMedicine = "Paracetamol, Ibuprofen, Prednisone, Atorvastatin, Levothyroxine";
     const earlyDiseaseDetection = "Blood tests to monitor cholesterol levels and detect heart disease risk, Regular screenings for cancer, such as mammograms or colonoscopies, Regular eye exams to detect vision problems or eye diseases."
     const publicHealthMonitoring = "Follow public health guidelines regarding social distancing and mask-wearing, Report any symptoms of contagious illnesses to healthcare authorities, Advocate for policies that promote public health and safety."
@@ -25,7 +25,7 @@ const Dashboard = () => {
         earlyDiseaseDetection: earlyDiseaseDetection,
         publicHealthMonitoring: publicHealthMonitoring,
     });
-    
+
     const [tab, setTab] = useState('image');
     const [file, setFile] = useState(null);
     const [qrCodeValue, setQrCodeValue] = useState('');
@@ -52,7 +52,7 @@ const Dashboard = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         // Extract necessary data for the QR code
-        const { name, age, gender, symptoms, healthRisks, recommendPreventiveMeasures, personalizedMedicine, earlyDiseaseDetection, publicHealthMonitoring   } = patientDetails;
+        const { name, age, gender, symptoms, healthRisks, recommendPreventiveMeasures, personalizedMedicine, earlyDiseaseDetection, publicHealthMonitoring } = patientDetails;
         // Combine patient details into one object
         const qrData = {
             name,
@@ -71,13 +71,13 @@ const Dashboard = () => {
         localStorage.setItem('qrCodeData', qrCodeValue);
         setQrCodeValue(qrCodeValue);
         console.log(qrCodeValue);
-    
+
         showAldoAlert("Scan disease successfully!", 'success');
     };
-    
-    
-    
-    
+
+
+
+
 
 
     return (

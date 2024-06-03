@@ -86,8 +86,8 @@ function ProfileMenu() {
               key={label}
               onClick={closeMenu}
               className={`flex items-center gap-2 rounded ${isLastItem
-                  ? "hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10"
-                  : ""
+                ? "hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10"
+                : ""
                 }`}
             >
               {React.createElement(icon, {
@@ -247,7 +247,7 @@ export function Topbar() {
           className="mr-4 ml-2 cursor-pointer py-1.5 font-medium"
         >
           Decentralized Healthcare Data Analyzer (DHDA)
-        </Typography> 
+        </Typography>
         {/* <div className="hidden lg:block">
           <NavList />
         </div> */}
