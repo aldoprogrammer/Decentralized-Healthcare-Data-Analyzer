@@ -1,14 +1,39 @@
+import React, { useState } from "react";
 import {
   Card,
   Input,
-  Checkbox,
   Button,
   Typography,
 } from "@material-tailwind/react";
-import Logo from '../assets/dhda.png'
-import { Link } from "react-router-dom";
+import Logo from '../assets/dhda.png';
+import { Link, useNavigate } from "react-router-dom";
 
 export function Login() {
+  const navigate = useNavigate();
+  const [isMetamaskInstalled, setIsMetamaskInstalled] = useState(false);
+
+  React.useEffect(() => {
+    if (typeof window.ethereum !== 'undefined') {
+      setIsMetamaskInstalled(true);
+    }
+  }, []);
+
+  const handleMetamaskLogin = async () => {
+    try {
+      if (window.ethereum) {
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        const account = accounts[0];
+        console.log('Connected account:', account);
+        // You can add your authentication logic here using the account address
+        navigate('/dashboard');
+      } else {
+        alert('Metamask is not installed. Please install Metamask and try again.');
+      }
+    } catch (error) {
+      console.error('Error connecting to Metamask:', error);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-3 items-center justify-center h-auto">
       <img src={Logo} alt="" className="w-52 h-52" />
@@ -45,16 +70,16 @@ export function Login() {
               }}
             />
           </div>
-          <Link to='/dashboard'>
-            <Button className="mt-6" fullWidth>
-              Sign In
-            </Button>
-            {/* Create button for Metamask login */}
-            <Button className="mt-3 bg-yellow-900 hover:bg-gradient-to-r text-white font-bold duration-300 ease-out px-4 rounded
-                w-full py-3">
-              Connect with Metamask
-            </Button>
-          </Link>
+          <Button className="mt-6" fullWidth>
+            <Link to='/dashboard'>Sign In</Link>
+          </Button>
+          {/* Create button for Metamask login */}
+          <Button 
+            className="mt-3 bg-yellow-900 hover:bg-gradient-to-r text-white font-bold duration-300 ease-out px-4 rounded w-full py-3"
+            onClick={handleMetamaskLogin}
+          >
+            Connect with Metamask
+          </Button>
           <Typography color="gray" className="mt-4 text-center font-normal">
             Don't have an account?{" "}
             <a href="/register" className="font-medium text-gray-900">

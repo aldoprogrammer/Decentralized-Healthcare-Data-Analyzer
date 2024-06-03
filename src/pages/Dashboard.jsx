@@ -5,6 +5,7 @@ import { Input, Textarea, Button, Select, Option } from '@material-tailwind/reac
 import { useAldoAlert } from 'aldo-alert';
 import QRCode from 'qrcode.react';
 import { Link } from 'react-router-dom';
+import { ScaleLoader } from 'react-spinners';
 
 const Dashboard = () => {
     const { showAldoAlert } = useAldoAlert();
@@ -30,6 +31,7 @@ const Dashboard = () => {
     const [tab, setTab] = useState('image');
     const [file, setFile] = useState(null);
     const [qrCodeValue, setQrCodeValue] = useState('');
+    const [loading, setLoading] = useState(false); // State to manage the loading state
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -67,13 +69,22 @@ const Dashboard = () => {
             publicHealthMonitoring,
         };
         // Convert the data to a string
+
         const qrCodeValue = JSON.stringify(qrData);
+        setLoading(true);
+        setTimeout(() => {
         // Store the JSON data in local storage
         localStorage.setItem('qrCodeData', qrCodeValue);
         setQrCodeValue(qrCodeValue);
         console.log(qrCodeValue);
+        setLoading(false);
+        showAldoAlert("Scan disease successfully!", 'warning');
+       
+            // setQrCodeResult(qrCodeData);
+            // setLoading(false);
+        }, 3000);
 
-        showAldoAlert("Scan disease successfully!", 'success');
+       
     };
 
 
@@ -162,7 +173,10 @@ const Dashboard = () => {
                                 />
                             )}
                         </div>
-                        <Button type='submit'>Submit</Button>
+                        <Button type='submit'>
+                        {loading ? <ScaleLoader color='#ffffff' loading={loading} height={16} width={6} radius={2} margin={3} />
+                            : "Submit"}
+                            </Button>
                     </form>
                     {qrCodeValue && (
                         <div className='mt-5'>

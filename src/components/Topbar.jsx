@@ -26,7 +26,7 @@ import {
   Bars2Icon,
 } from "@heroicons/react/24/solid";
 import Logo from '../assets/dhda.png';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 // profile menu component
 const profileMenuItems = [
@@ -54,8 +54,17 @@ const profileMenuItems = [
 
 function ProfileMenu() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const navigate = useNavigate();
 
   const closeMenu = () => setIsMenuOpen(false);
+
+  const handleSignOut = () => {
+    // Clear any application-specific data here
+    // For example, you might clear tokens or user session data
+    console.log("Signing out...");
+    // Redirect to the homepage or login page
+    navigate('/');
+  };
 
   return (
     <Menu open={isMenuOpen} handler={setIsMenuOpen} placement="bottom-end">
@@ -85,7 +94,10 @@ function ProfileMenu() {
           return (
             <MenuItem
               key={label}
-              onClick={closeMenu}
+              onClick={() => {
+                closeMenu();
+                if (isLastItem) handleSignOut();
+              }}
               className={`flex items-center gap-2 rounded ${isLastItem
                 ? "hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10"
                 : ""
@@ -251,9 +263,6 @@ export function Topbar() {
         >
           Decentralized Healthcare Data Analyzer (DHDA)
         </Typography>
-        {/* <div className="hidden lg:block">
-          <NavList />
-        </div> */}
         <IconButton
           size="sm"
           color="blue-gray"
@@ -263,10 +272,6 @@ export function Topbar() {
         >
           <Bars2Icon className="h-6 w-6" />
         </IconButton>
-
-        {/* <Button size="sm" variant="text">
-          <span>Log In</span>
-        </Button> */}
         <ProfileMenu />
       </div>
       <MobileNav open={isNavOpen} className="overflow-scroll">

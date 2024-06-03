@@ -10,15 +10,12 @@ import ButtonBlockchain from '../components/ButtonBlockchain';
 import QrScanner from 'qr-scanner';
 
 // Printable content component
-const PrintableContent = ({ qrCodeResult, formattedDateTime }) =>
-
-(
+const PrintableContent = ({ qrCodeResult, formattedDateTime }) => (
     <div className='mt-5 bg-white rounded-lg shadow-md p-6'>
-
         <div className='grid grid-cols-1 md:grid-cols-2 gap-6 '>
             <div className='relative'>
-                <h1 class="text-2xl font-bold">Patient Health Report</h1>
-                <img src={Logo} alt="Logo" class="w-24 h-24 absolute top-[-1.5rem] left-[236px]" />
+                <h1 className="text-2xl font-bold">Patient Health Report</h1>
+                <img src={Logo} alt="Logo" className="w-24 h-24 absolute top-[-1.5rem] left-[236px]" />
             </div>
             <div className='flex flex-col'>
                 <p className='text-sm font-semibold text-black'>Patients Name:</p>
@@ -78,7 +75,9 @@ const PrintableContent = ({ qrCodeResult, formattedDateTime }) =>
 
 const Medichine = () => {
     const [qrCodeResult, setQrCodeResult] = useState('');
-    const [loading, setLoading] = useState(false); // State to manage the loading state
+    const [loading, setLoading] = useState(false);
+    const [cameraOpen, setCameraOpen] = useState(false);
+    const videoRef = useRef();
     const currentDate = new Date();
     const dateOptions = { day: '2-digit', month: 'short', year: 'numeric' };
     const timeOptions = { hour: 'numeric', minute: 'numeric', hour12: true };
@@ -86,8 +85,6 @@ const Medichine = () => {
     const formattedTime = currentDate.toLocaleTimeString('en-US', timeOptions);
     const formattedDateTime = `${formattedDate} / ${formattedTime}`;
     const { showAldoAlert } = useAldoAlert();
-
-
 
     const handlePrint = () => {
         const printableContent = document.getElementById('printable-content');
@@ -99,7 +96,6 @@ const Medichine = () => {
                     <title>Invoice Patients</title>
                     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
                     <style>
-                        /* Add your desired styles here */
                         .mt-5 {
                             margin-top: 1.25rem;
                         }
@@ -124,7 +120,6 @@ const Medichine = () => {
                         .mb-4 {
                             margin-bottom: 1rem;
                         }
-                        /* Add more styles as needed */
                     </style>
                 </head>
                 <body>
@@ -143,9 +138,6 @@ const Medichine = () => {
         }
     };
 
-
-
-
     const handleScanClick = () => {
         const qrCodeData = localStorage.getItem('qrCodeData');
         if (!qrCodeData) {
@@ -160,33 +152,17 @@ const Medichine = () => {
             setLoading(false);
         }, 3000);
     };
-    const [cameraOpen, setCameraOpen] = useState(false);
+
     const toggleCamera = () => {
         setCameraOpen(prevState => !prevState);
     };
 
     const handleBlockchain = () => {
-        // Store the data in the blockchain
         showAldoAlert('Data stored in the blockchain successfully!', 'warning');
-    }
-
-    const videoRef = useRef();
-
-    useEffect(() => {
-        if (cameraOpen) {
-            startScanner(); // Start scanning when camera is opened
-        }
-    }, [cameraOpen]);
-
-    useEffect(() => {
-        if (cameraOpen) {
-            startScanner(); // Start scanning when component mounts
-        }
-    }, []); // Empty dependency array to ensure this effect runs only once when the component mounts
-
+    };
 
     const handleQRCodeScanned = result => {
-        setQRCodeResult(result);
+        setQrCodeResult(result.data);
     };
 
     const startScanner = async () => {
@@ -200,6 +176,12 @@ const Medichine = () => {
             console.error('Error starting QR scanner:', error);
         }
     };
+
+    useEffect(() => {
+        if (cameraOpen) {
+            startScanner();
+        }
+    }, [cameraOpen]);
 
     return (
         <div className='flex flex-col'>
@@ -215,12 +197,10 @@ const Medichine = () => {
                             type="file"
                             accept="image/*"
                         />
-                        {/* image qr code camera scanner npm */}
                         <Button onClick={toggleCamera}>
                             {cameraOpen ? 'Close Camera' : 'Camera Scanner'}
                         </Button>
                     </div>
-                    {/* Conditional rendering of QR Scanner */}
                     {cameraOpen && (
                         <div className='mt-5 flex gap-4'>
                             <video ref={videoRef} style={{ width: '60%', height: '300px', marginLeft: 'auto', marginRight: 'auto' }}></video>
@@ -235,14 +215,11 @@ const Medichine = () => {
                         Clear
                     </Button>
 
-                    {/* Conditionally render printable content */}
                     {qrCodeResult && (
                         <>
                             <h2 className='text-lg font-semibold my-4'>Scanned QR Code:</h2>
                             <div id="printable-content">
                                 <PrintableContent qrCodeResult={qrCodeResult} formattedDateTime={formattedDateTime} />
-                                {/* Print Button */}
-
                             </div>
                             <div className='flex gap-3 items-center mt-5'>
                                 <Button className='w-fit no-print' onClick={handlePrint}>
@@ -252,7 +229,6 @@ const Medichine = () => {
                             </div>
                         </>
                     )}
-
                 </div>
             </div>
         </div>
