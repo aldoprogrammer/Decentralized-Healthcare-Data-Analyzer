@@ -26,6 +26,7 @@ import {
   Bars2Icon,
 } from "@heroicons/react/24/solid";
 import Logo from '../assets/dhda.png';
+import { Link } from "react-router-dom";
 
 // profile menu component
 const profileMenuItems = [
@@ -240,7 +241,9 @@ export function Topbar() {
   return (
     <Navbar className="mx-auto max-w-screen-xl p-2 lg:rounded-full lg:pl-6 shadow-none">
       <div className="relative mx-auto flex items-center justify-between text-blue-gray-900">
-        <img src={Logo} alt="" className="w-24 h-24" />
+        <Link to="/">
+          <img src={Logo} alt="" className="w-24 h-24" />
+        </Link>
         <Typography
           as="a"
           href="#"
