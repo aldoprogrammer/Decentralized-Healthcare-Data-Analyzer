@@ -4,6 +4,7 @@ import { Topbar } from '../components/Topbar';
 import { Input, Textarea, Button, Select, Option } from '@material-tailwind/react';
 import { useAldoAlert } from 'aldo-alert';
 import QRCode from 'qrcode.react';
+import { Link } from 'react-router-dom';
 
 const Dashboard = () => {
     const { showAldoAlert } = useAldoAlert();
@@ -87,7 +88,7 @@ const Dashboard = () => {
                 <Sidebar />
                 <div className='flex flex-col w-full p-5'>
                     <h1 className='text-xl font-semibold text-blue-gray-900'>
-                        Input Patients
+                        Patient's Health Consultation
                     </h1>
                     <form className='mt-5' onSubmit={handleSubmit}>
                         <div className='mb-4'>
@@ -167,6 +168,9 @@ const Dashboard = () => {
                         <div className='mt-5'>
                             <h2 className='text-lg font-semibold'>Generated QR Code:</h2>
                             <QRCode value={qrCodeValue} />
+                            <Link to='/print-invoice'>
+                                <Button type='button' className='mt-5'>Print</Button>
+                            </Link>
                         </div>
                     )}
                 </div>
