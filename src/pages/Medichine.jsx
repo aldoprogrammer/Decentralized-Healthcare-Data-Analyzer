@@ -1,16 +1,25 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Sidebar } from '../components/Sidebar';
 import { Topbar } from '../components/Topbar';
 import { Button } from '@material-tailwind/react';
 import QrCode from 'qrcode-reader';
+import Logo from '../assets/dhda.png';
 import { ScaleLoader } from 'react-spinners';
+import { useAldoAlert } from 'aldo-alert';
+import ButtonBlockchain from '../components/ButtonBlockchain';
+import QrScanner from 'qr-scanner';
 
 // Printable content component
 const PrintableContent = ({ qrCodeResult, formattedDateTime }) =>
 
 (
     <div className='mt-5 bg-white rounded-lg shadow-md p-6'>
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-6 '>
+            <div className='relative'>
+                <h1 class="text-2xl font-bold">Patient Health Report</h1>
+                <img src={Logo} alt="Logo" class="w-24 h-24 absolute top-[-1.5rem] left-[236px]" />
+            </div>
             <div className='flex flex-col'>
                 <p className='text-sm font-semibold text-black'>Patients Name:</p>
                 <p className='text-base text-gray-800'>{JSON.parse(qrCodeResult).name}</p>
@@ -76,6 +85,7 @@ const Medichine = () => {
     const formattedDate = currentDate.toLocaleDateString('en-GB', dateOptions);
     const formattedTime = currentDate.toLocaleTimeString('en-US', timeOptions);
     const formattedDateTime = `${formattedDate} / ${formattedTime}`;
+    const { showAldoAlert } = useAldoAlert();
 
 
 
@@ -150,6 +160,46 @@ const Medichine = () => {
             setLoading(false);
         }, 3000);
     };
+    const [cameraOpen, setCameraOpen] = useState(false);
+    const toggleCamera = () => {
+        setCameraOpen(prevState => !prevState);
+    };
+
+    const handleBlockchain = () => {
+        // Store the data in the blockchain
+        showAldoAlert('Data stored in the blockchain successfully!', 'warning');
+    }
+
+    const videoRef = useRef();
+
+    useEffect(() => {
+        if (cameraOpen) {
+            startScanner(); // Start scanning when camera is opened
+        }
+    }, [cameraOpen]);
+
+    useEffect(() => {
+        if (cameraOpen) {
+            startScanner(); // Start scanning when component mounts
+        }
+    }, []); // Empty dependency array to ensure this effect runs only once when the component mounts
+
+
+    const handleQRCodeScanned = result => {
+        setQRCodeResult(result);
+    };
+
+    const startScanner = async () => {
+        try {
+            const scanner = new QrScanner(videoRef.current, result => {
+                handleQRCodeScanned(result);
+                scanner.stop();
+            });
+            scanner.start();
+        } catch (error) {
+            console.error('Error starting QR scanner:', error);
+        }
+    };
 
     return (
         <div className='flex flex-col'>
@@ -160,15 +210,25 @@ const Medichine = () => {
                     <h1 className='text-xl font-semibold text-blue-gray-900'>
                         Medicine Store
                     </h1>
-                    <div className='mt-5'>
+                    <div className='mt-5 flex gap-4 items-center'>
                         <input
                             type="file"
                             accept="image/*"
                         />
+                        {/* image qr code camera scanner npm */}
+                        <Button onClick={toggleCamera}>
+                            {cameraOpen ? 'Close Camera' : 'Camera Scanner'}
+                        </Button>
                     </div>
+                    {/* Conditional rendering of QR Scanner */}
+                    {cameraOpen && (
+                        <div className='mt-5 flex gap-4'>
+                            <video ref={videoRef} style={{ width: '60%', height: '300px', marginLeft: 'auto', marginRight: 'auto' }}></video>
+                        </div>
+                    )}
                     <Button className='mt-5 focus:opacity-[200]' onClick={handleScanClick}>
                         {loading ? <ScaleLoader color='#ffffff' loading={loading} height={16} width={6} radius={2} margin={3} />
-                            : "Scan"}
+                            : "Image Scanner"}
                     </Button>
 
                     <Button className='mt-5' onClick={() => setQrCodeResult('')}>
@@ -181,13 +241,18 @@ const Medichine = () => {
                             <h2 className='text-lg font-semibold my-4'>Scanned QR Code:</h2>
                             <div id="printable-content">
                                 <PrintableContent qrCodeResult={qrCodeResult} formattedDateTime={formattedDateTime} />
+                                {/* Print Button */}
+
+                            </div>
+                            <div className='flex gap-3 items-center mt-5'>
+                                <Button className='w-fit no-print' onClick={handlePrint}>
+                                    Print
+                                </Button>
+                                <ButtonBlockchain />
                             </div>
                         </>
                     )}
-                    {/* Print Button */}
-                    <Button className='mt-5 w-fit' onClick={handlePrint}>
-                        Print
-                    </Button>
+
                 </div>
             </div>
         </div>
