@@ -1,56 +1,168 @@
-import React from 'react';
-import { Sidebar } from '../components/Sidebar'
-import { Topbar } from '../components/Topbar'
-import { Chip } from '@material-tailwind/react';
-
-const categories = [
-    { id: 1, name: "Technology" },
-    { id: 2, name: "Health" },
-    { id: 3, name: "Education" },
-    { id: 4, name: "Entertainment" },
-    { id: 5, name: "Sports" },
-    { id: 6, name: "Finance" },
-    { id: 7, name: "Travel" },
-    { id: 8, name: "Food" },
-    { id: 9, name: "Fashion" },
-    { id: 10, name: "Science" }
-];
+import React, { useState } from 'react';
+import { Sidebar } from '../components/Sidebar';
+import { Topbar } from '../components/Topbar';
+import { Input, Textarea, Button, Select, Option } from '@material-tailwind/react';
+import { useAldoAlert } from 'aldo-alert';
+import QRCode from 'qrcode.react';
 
 const Dashboard = () => {
+    const { showAldoAlert } = useAldoAlert();
+
+    const healthRisks = "predict health risks"
+    const recommendPreventiveMeasures = "to recommend preventive measures to the patient. " 
+    const personalizedMedicine = "this is dummy medicnie"
+    const earlyDiseaseDetection = "this is dummy disease"
+    const publicHealthMonitoring = "please dont go to crowsed places"
+
+    const [patientDetails, setPatientDetails] = useState({
+        name: '',
+        age: '',
+        gender: '',
+        symptoms: '',
+        healthRisks: healthRisks,
+        recommendPreventiveMeasures: recommendPreventiveMeasures,
+        personalizedMedicine: personalizedMedicine,
+        earlyDiseaseDetection: earlyDiseaseDetection,
+        publicHealthMonitoring: publicHealthMonitoring,
+    });
+    const [tab, setTab] = useState('image');
+    const [file, setFile] = useState(null);
+    const [qrCodeValue, setQrCodeValue] = useState('');
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setPatientDetails({
+            ...patientDetails,
+            [name]: value,
+        });
+    };
+
+    const handleGenderChange = (value) => {
+        setPatientDetails({
+            ...patientDetails,
+            gender: value,
+        });
+    };
+
+    const handleFileChange = (e) => {
+        setFile(e.target.files[0]);
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        // Extract necessary data for the QR code
+        const { name, age, gender, symptoms, healthRisks, recommendPreventiveMeasures, personalizedMedicine   } = patientDetails;
+        // Combine patient details into one object
+        const qrData = {
+            name,
+            age,
+            gender,
+            symptoms,
+            healthRisks,
+            recommendPreventiveMeasures,
+            personalizedMedicine
+        };
+        // Convert the data to a string
+        const qrCodeValue = JSON.stringify(qrData);
+        setQrCodeValue(qrCodeValue);
+        console.log(qrCodeValue);
+    
+        showAldoAlert("Scan disease successfully!", 'success');
+    };
+    
+    
+    
+
+
     return (
         <div className='flex flex-col'>
             <Topbar />
             <div className='flex'>
                 <Sidebar />
-                <div className='flex flex-col w-full'>
-                    <div className='grid grid-cols-2 items-center p-4 border-b gap-5 border-blue-gray-200'>
-                       
-                    </div>
-                    <div className='p-4'>
-                        {/* categori list */}
-                        <div className='flex flex-col gap-4'>
-                            <h1 className='text-xl font-semibold text-blue-gray-900'>
-                                Explore by Categories
-                            </h1>
-                            <div className='overflow-x-auto flex gap-2'>
-                                {categories.map(category => (
-                                    <Chip key={category.id} value={category.name} />
-                                ))}
-                            </div>
+                <div className='flex flex-col w-full p-5'>
+                    <h1 className='text-xl font-semibold text-blue-gray-900'>
+                        Input Patients
+                    </h1>
+                    <form className='mt-5' onSubmit={handleSubmit}>
+                        <div className='mb-4'>
+                            <Input
+                                type='text'
+                                name='name'
+                                label='Name'
+                                value={patientDetails.name}
+                                onChange={handleChange}
+                                required
+                            />
                         </div>
-
-                        {/* video to try */}
-                        <div className='flex flex-col mt-5'>
-                            <h1 className='text-xl font-semibold text-blue-gray-900'>
-                                Video to Try
-                            </h1>
-                            <div className='grid grid-cols-3 gap-4'>
-                                {/* <VideoCard />
-                                <VideoCard />
-                                <VideoCard /> */}
-                            </div>
+                        <div className='mb-4'>
+                            <Input
+                                type='number'
+                                name='age'
+                                label='Age'
+                                value={patientDetails.age}
+                                onChange={handleChange}
+                                required
+                            />
                         </div>
-                    </div>
+                        <div className='mb-4'>
+                            <Select
+                                label="Gender"
+                                value={patientDetails.gender}
+                                onChange={handleGenderChange}
+                                required
+                            >
+                                <Option value="male">Male</Option>
+                                <Option value="female">Female</Option>
+                                <Option value="other">Other</Option>
+                            </Select>
+                        </div>
+                        <div className='mb-4'>
+                            <h2 className='block mb-2 text-xl font-bold '>
+                                Scan the Disease
+                            </h2>
+                            <div className='mb-4 gap-5 flex'>
+                                <Button
+                                    type='button'
+                                    onClick={() => setTab('image')}
+                                    className={tab === 'image' ? 'bg-blue-500' : ''}
+                                >
+                                    Upload Image
+                                </Button>
+                                <Button
+                                    type='button'
+                                    onClick={() => setTab('symptoms')}
+                                    className={tab === 'symptoms' ? 'bg-blue-500' : ''}
+                                >
+                                    Enter Symptoms
+                                </Button>
+                            </div>
+                            {tab === 'image' ? (
+                                <div className='mb-4'>
+                                    <label className="block mb-2 text-sm font-medium text-gray-700">Upload File</label>
+                                    <input
+                                        type="file"
+                                        name="file"
+                                        onChange={handleFileChange}
+                                        className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
+                                    />
+                                </div>
+                            ) : (
+                                <Textarea
+                                    name='symptoms'
+                                    label='Symptoms'
+                                    value={patientDetails.symptoms}
+                                    onChange={handleChange}
+                                />
+                            )}
+                        </div>
+                        <Button type='submit'>Submit</Button>
+                    </form>
+                    {qrCodeValue && (
+                        <div className='mt-5'>
+                            <h2 className='text-lg font-semibold'>Generated QR Code:</h2>
+                            <QRCode value={qrCodeValue} />
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
